@@ -1,0 +1,33 @@
+services:
+  # app: rust/actix-web
+  rust-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    tty: true
+    volumes:
+      - ../:/app
+    working_dir: /app
+    ports:
+      - 8080:8080
+    environment:
+      CARGO_BUILD_TARGET_DIR: /tmp/target
+    depends_on:
+      db:
+        condition: service_healthy
+  # db: postgres
+  db:
+    image: postgres:16
+    restart: always
+    shm_size: 128mb
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: xxrust
+      POSTGRES_USER: xxuser
+      POSTGRES_PASSWORD: xxpass
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", -U $(POSTGRES_USER:-xxuser)]
+      interval: 5s
+      retries: 3

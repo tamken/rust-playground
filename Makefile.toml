@@ -1,0 +1,21 @@
+[tasks.watch]
+run_task = [
+	{ name = ["lint", "run"] }
+]
+watch = true
+
+[tasks.format]
+command = "cargo"
+args = ["fmt"]
+
+[tasks.lint]
+command = "cargo"
+args = ["clippy"]
+
+[tasks.run]
+command = "cargo"
+args = ["run"]
+
+[tasks.migrate]
+command = "sea-orm-cli"
+args = ["migrate"]
